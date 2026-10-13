@@ -10,11 +10,11 @@ using namespace geode::prelude;
 
 inline gd::string charVectorToString(gd::vector<char> charVector) {
     std::string str(charVector.begin(), charVector.end());
-    gd::string gdStr(str);
+    gd::string gdStr(str.c_str());
     return gdStr;
 }
 inline gd::vector<char> stringToCharVector(gd::string str) {
-    gd::vector<char> charVector(str.begin(), str.end());
+    gd::vector<char> charVector(str.c_str());
     return charVector;
 }
 
@@ -103,11 +103,11 @@ void logRequest(CCHttpRequest *request) {
 
 bool captureMode = false;
 bool sentFromPopup = false;
-MyRequestObject theCurrentRequest = {};
-MyResponseObject theCurrentResponse = {};
+MyRequestObject theCurrentRequest;
+MyResponseObject theCurrentResponse;
 
 class ResponseInspectPopup : public geode::Popup {
-    MyResponseObject m_currentResponse = {};
+    MyResponseObject m_currentResponse;
     CCMenu *m_inspectorMenu;
     gd::string m_originalRespBody;
     TextInput *m_bodyField;
@@ -301,7 +301,7 @@ public:
 };
 
 class RequestInspectPopup : public geode::Popup {
-    MyRequestObject m_currentRequest = {};
+    MyRequestObject m_currentRequest;
     gd::string m_originalReqBody;
     CCMenu *m_inspectorMenu;
     CCMenuItemSpriteExtra *m_getMethodButton; // me when idk that CCObject tags exists
