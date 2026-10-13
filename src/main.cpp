@@ -13,12 +13,16 @@ inline gd::string charVectorToString(gd::vector<char> charVector) {
     std::string str(charVector.begin(), charVector.end());
     gd::string gdStr(str.c_str());
 #else
-    std::string str(charVector.begin(), charVector.end());
+    std::string gdStr(charVector.begin(), charVector.end());
 #endif
     return gdStr;
 }
 inline gd::vector<char> stringToCharVector(gd::string str) {
+#ifdef GEODE_IS_ANDROID
+    gd::vector<char> charVector(str.c_str(), str.c_str()+str.size());
+#else
     gd::vector<char> charVector(str.begin(), str.end());
+#endif
     return charVector;
 }
 
