@@ -2,12 +2,12 @@
 
 using namespace geode::prelude;
 
-inline std::string charVectorToString(std::vector<char> charVector) {
-    std::string str(charVector.begin(), charVector.end());
+inline gd::string charVectorToString(gd::vector<char> charVector) {
+    gd::string str(charVector.begin(), charVector.end());
     return str;
 }
-inline std::vector<char> stringToCharVector(std::string str) {
-    std::vector<char> charVector(str.begin(), str.end());
+inline gd::vector<char> stringToCharVector(gd::string str) {
+    gd::vector<char> charVector(str.begin(), str.end());
     return charVector;
 }
 
@@ -15,10 +15,10 @@ inline std::vector<char> stringToCharVector(std::string str) {
 // p.s. i didnt know dynamic_cast at that time lol
 struct MyRequestObject {
     CCHttpRequest::HttpRequestType requestType;
-    std::string url;
-    std::vector<std::string> headers;
-    std::string body;
-    std::string tag;
+    gd::string url;
+    gd::vector<gd::string> headers;
+    gd::string body;
+    gd::string tag;
     CCObject *targetObj;
     SEL_HttpResponse callback;
     void *userData;
@@ -55,10 +55,10 @@ CCHttpRequest *toCCHttpRequestPtr(MyRequestObject request) {
 struct MyResponseObject {
     MyRequestObject request;
     bool succeed;
-    std::string body;
-    std::string header;
+    gd::string body;
+    gd::string header;
     int statusCode;
-    std::string errorBuffer;
+    gd::string errorBuffer;
 };
 
 MyResponseObject toMyResponseObject(CCHttpResponse *response) {
@@ -102,7 +102,7 @@ MyResponseObject theCurrentResponse = {};
 class ResponseInspectPopup : public geode::Popup {
     MyResponseObject m_currentResponse = {};
     CCMenu *m_inspectorMenu;
-    std::string m_originalRespBody;
+    gd::string m_originalRespBody;
     TextInput *m_bodyField;
 
 protected:
@@ -155,7 +155,7 @@ protected:
         statusCodeField->setFilter("0123456789");
         statusCodeField->setMaxCharCount(3);
 
-        statusCodeField->setCallback([this, statusCodeField](std::string newCodeStr){
+        statusCodeField->setCallback([this, statusCodeField](gd::string newCodeStr){
             auto newCode = utils::numFromString<int>(newCodeStr);
             m_currentResponse.statusCode = newCode ? newCode.unwrap() : 200;
         });
@@ -212,7 +212,7 @@ protected:
             );
             m_bodyField->setEnabled(false);
         } else {
-            m_bodyField->setCallback([this](std::string newBody) {
+            m_bodyField->setCallback([this](gd::string newBody) {
                 m_currentResponse.body = newBody;
             });
             m_bodyField->setString(m_currentResponse.body);
@@ -295,7 +295,7 @@ public:
 
 class RequestInspectPopup : public geode::Popup {
     MyRequestObject m_currentRequest = {};
-    std::string m_originalReqBody;
+    gd::string m_originalReqBody;
     CCMenu *m_inspectorMenu;
     CCMenuItemSpriteExtra *m_getMethodButton; // me when idk that CCObject tags exists
     CCMenuItemSpriteExtra *m_postMethodButton;
@@ -346,7 +346,7 @@ protected:
         float urlFieldWidth = urlMenu->getContentWidth() - urlLabel->getContentWidth()*2;
         
         auto urlField = TextInput::create(urlFieldWidth, "enter url here...");
-        urlField->setCallback([this](std::string newUrl) {
+        urlField->setCallback([this](gd::string newUrl) {
             m_currentRequest.url = newUrl;
         });
         urlField->setTextAlign(TextInputAlign::Left);
@@ -452,7 +452,7 @@ protected:
             );
             m_bodyField->setEnabled(false);
         } else {
-            m_bodyField->setCallback([this](std::string newBody) {
+            m_bodyField->setCallback([this](gd::string newBody) {
                 m_currentRequest.body = newBody;
             });
             m_bodyField->setString(m_currentRequest.body);
@@ -548,7 +548,7 @@ protected:
 
     void onWrapperRequest(CCHttpClient *client, CCHttpResponse *response) {
         auto respData = response->getResponseData();
-        std::string respDataStr(respData->begin(), respData->end());
+        gd::string respDataStr(respData->begin(), respData->end());
 
         theCurrentResponse = toMyResponseObject(response);
         CCDirector::sharedDirector()->getRunningScene()->runAction(
@@ -583,7 +583,7 @@ $on_game(Loaded) {
 class $modify(MyCCHttpClient, CCHttpClient) {
     void send(cocos2d::extension::CCHttpRequest *request) {
         auto inspectorKeybinds = \
-            Mod::get()->getSettingValue<std::vector<geode::Keybind>>("inspector-keybind");
+            Mod::get()->getSettingValue<gd::vector<geode::Keybind>>("inspector-keybind");
 
         if (!sentFromPopup && (captureMode || inspectorKeybinds.size() == 0)) {
             logRequest(request);
