@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 
-#if defined(GEODE_IS_ANDROID)
+#ifdef GEODE_IS_ANDROID
 #define STRING_LENGTH(s) s.size()
 #else
 #define STRING_LENGTH(s) s.length()
@@ -9,12 +9,16 @@
 using namespace geode::prelude;
 
 inline gd::string charVectorToString(gd::vector<char> charVector) {
+#ifdef GEODE_IS_ANDROID
     std::string str(charVector.begin(), charVector.end());
     gd::string gdStr(str.c_str());
+#else
+    std::string str(charVector.begin(), charVector.end());
+#endif
     return gdStr;
 }
 inline gd::vector<char> stringToCharVector(gd::string str) {
-    gd::vector<char> charVector(str.c_str());
+    gd::vector<char> charVector(str.begin(), str.end());
     return charVector;
 }
 
@@ -98,6 +102,7 @@ void logRequest(CCHttpRequest *request) {
         case CCHttpRequest::HttpRequestType::kHttpPost: log::info("request type: post"); break;
         case CCHttpRequest::HttpRequestType::kHttpPut: log::info("request type: put"); break;
         case CCHttpRequest::HttpRequestType::kHttpDelete: log::info("request type: delete"); break;
+        default: break;
     }
 }
 
@@ -587,7 +592,7 @@ $on_game(Loaded) {
 class $modify(MyCCHttpClient, CCHttpClient) {
     void send(cocos2d::extension::CCHttpRequest *request) {
         auto inspectorKeybinds = \
-            Mod::get()->getSettingValue<gd::vector<geode::Keybind>>("inspector-keybind");
+            Mod::get()->getSettingValue<std::vector<geode::Keybind>>("inspector-keybind");
 
         if (!sentFromPopup && (captureMode || inspectorKeybinds.size() == 0)) {
             logRequest(request);
