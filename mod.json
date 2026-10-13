@@ -1,0 +1,23 @@
+{
+	"geode": "5.7.1",
+	"gd": {
+		"win": "2.2081",
+		"android": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081"
+	},
+	"id": "1ooo3p.netinspect",
+	"name": "netInspect",
+	"version": "v1.0.0",
+	"developer": "1ooo3p",
+	"description": "guys its my first mod",
+	"dependencies": {},
+	"settings": {
+		"inspector-keybind": {
+			"type": "keybind",
+			"name": "capture mode key",
+			"description": "hold/release to start/stop capture mode. if no keybinds present then capture mode is always on",
+			"default": "LeftShift"
+		}
+	}
+}
