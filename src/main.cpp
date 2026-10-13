@@ -9,8 +9,9 @@
 using namespace geode::prelude;
 
 inline gd::string charVectorToString(gd::vector<char> charVector) {
-    gd::string str(charVector.begin(), charVector.end());
-    return str;
+    std::string str(charVector.begin(), charVector.end());
+    gd::string gdStr(str);
+    return gdStr;
 }
 inline gd::vector<char> stringToCharVector(gd::string str) {
     gd::vector<char> charVector(str.begin(), str.end());
