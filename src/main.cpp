@@ -1,5 +1,11 @@
 #include <Geode/Geode.hpp>
 
+#if defined(GEODE_IS_ANDROID)
+#define STRING_LENGTH(s) s.size()
+#else
+#define STRING_LENGTH(s) s.length()
+#endif
+
 using namespace geode::prelude;
 
 inline gd::string charVectorToString(gd::vector<char> charVector) {
@@ -206,9 +212,9 @@ protected:
         );
 
         m_bodyField = TextInput::create(m_inspectorMenu->getContentWidth() - 20.f, "", "chatFont.fnt");
-        if (m_originalRespBody.length() > 300) {
+        if (STRING_LENGTH(m_originalRespBody) > 300) {
             m_bodyField->setPlaceholder(
-                fmt::format("Too much data, use the buttons ({} bytes)", m_originalRespBody.length())
+                fmt::format("Too much data, use the buttons ({} bytes)", STRING_LENGTH(m_originalRespBody))
             );
             m_bodyField->setEnabled(false);
         } else {
@@ -234,12 +240,12 @@ protected:
 
     void pasteBody(CCObject*) {
         m_currentResponse.body = clipboard::read();
-        if (m_originalRespBody.length() <= 300) m_bodyField->setString(m_currentResponse.body);
+        if (STRING_LENGTH(m_originalRespBody) <= 300) m_bodyField->setString(m_currentResponse.body);
     }
 
     void resetBody(CCObject*) {
         m_currentResponse.body = m_originalRespBody;
-        if (m_originalRespBody.length() <= 300) m_bodyField->setString(m_currentResponse.body);
+        if (STRING_LENGTH(m_originalRespBody) <= 300) m_bodyField->setString(m_currentResponse.body);
     }
 
     void createOkButton() {
@@ -446,9 +452,9 @@ protected:
         );
 
         m_bodyField = TextInput::create(m_inspectorMenu->getContentWidth() - 20.f, "", "chatFont.fnt");
-        if (m_originalReqBody.length() > 300) {
+        if (STRING_LENGTH(m_originalReqBody) > 300) {
             m_bodyField->setPlaceholder(
-                fmt::format("Too much data, use the buttons ({} bytes)", m_originalReqBody.length())
+                fmt::format("Too much data, use the buttons ({} bytes)", STRING_LENGTH(m_originalReqBody))
             );
             m_bodyField->setEnabled(false);
         } else {
@@ -510,12 +516,12 @@ protected:
 
     void pasteBody(CCObject*) {
         m_currentRequest.body = clipboard::read();
-        if (m_originalReqBody.length() <= 300) m_bodyField->setString(m_currentRequest.body);
+        if (STRING_LENGTH(m_originalReqBody) <= 300) m_bodyField->setString(m_currentRequest.body);
     }
 
     void resetBody(CCObject*) {
         m_currentRequest.body = m_originalReqBody;
-        if (m_originalReqBody.length() <= 300) m_bodyField->setString(m_currentRequest.body);
+        if (STRING_LENGTH(m_originalReqBody) <= 300) m_bodyField->setString(m_currentRequest.body);
     }
 
     void createOkButton() {
@@ -547,9 +553,6 @@ protected:
     }
 
     void onWrapperRequest(CCHttpClient *client, CCHttpResponse *response) {
-        auto respData = response->getResponseData();
-        gd::string respDataStr(respData->begin(), respData->end());
-
         theCurrentResponse = toMyResponseObject(response);
         CCDirector::sharedDirector()->getRunningScene()->runAction(
             CCCallFunc::create(this, callfunc_selector(RequestInspectPopup::showResponsePopup))
